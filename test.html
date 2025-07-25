@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D&D Character Registration</title>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.0/dist/sweetalert2.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #121212;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        form {
+            background-color: #1e1e2f;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            border: none;
+        }
+        button {
+            background-color: #4ecdc4;
+            color: #000;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>D&D Character Registration</h1>
+    <form id="dndForm">
+        <input type="text" name="playerName" placeholder="Player Name" required>
+        <input type="text" name="characterName" placeholder="Character Name" required>
+        <input type="text" name="race" placeholder="Race" required>
+        <input type="text" name="characterClass" placeholder="Class" required>
+        <input type="number" name="level" placeholder="Level" required min="1" max="20">
+        <button type="submit">Register</button>
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        const SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+
+        document.getElementById('dndForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = Object.fromEntries(new FormData(this).entries());
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            }).then(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Character Registered!',
+                    text: `${formData.characterName} (Level ${formData.level}) registered successfully!`,
+                    background: '#1a1a2e',
+                    color: '#ffffff',
+                    confirmButtonColor: '#4ecdc4'
+                });
+                this.reset();
+            }).catch(() => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Registration Failed',
+                    text: 'Could not send data.',
+                    background: '#1a1a2e',
+                    color: '#ffffff',
+                    confirmButtonColor: '#ff6b6b'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
